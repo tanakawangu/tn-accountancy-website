@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: tn-accountancy-website
+    runtime: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: CONTACT_TO_EMAIL
+        value: info@tandnaccountancy.co.uk
+      - key: ENABLE_AUTO_REPLY
+        value: "true"
+      # Set these in the Render dashboard — do not commit real values
+      - key: RESEND_API_KEY
+        sync: false
+      - key: RESEND_FROM_EMAIL
+        sync: false
