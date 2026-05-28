@@ -16,9 +16,6 @@ app.set('trust proxy', 1);
 // Reject oversized payloads before body parsing
 app.use(express.json({ limit: '10kb' }));
 
-// Serve all static frontend files from the project root
-app.use(express.static(path.join(__dirname)));
-
 // 10 submissions per IP per 15 minutes
 const formLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -301,13 +298,53 @@ async function handleEnquiry(req, res, defaultSource) {
 }
 
 // ---------------------------------------------------------------------------
-// Routes
+// API routes — declared first so they are never intercepted by static/page middleware
 // ---------------------------------------------------------------------------
 
 app.post('/api/contact', formLimiter, (req, res) => handleEnquiry(req, res, 'Contact Page'));
 app.post('/api/enquiry', formLimiter, (req, res) => handleEnquiry(req, res, 'General Enquiry'));
 
 app.get('/api/health', (_req, res) => res.json({ status: 'ok' }));
+
+// ---------------------------------------------------------------------------
+// Static assets — CSS, JS, images, and exact .html file requests
+// ---------------------------------------------------------------------------
+
+app.use(express.static(path.join(__dirname)));
+
+// ---------------------------------------------------------------------------
+// Clean URL routes — /contact serves contact.html, /about serves about.html, etc.
+// express.static already handles /, /index.html, /contact.html, /css/..., /js/...
+// These routes handle slugs without the .html extension.
+// ---------------------------------------------------------------------------
+
+const pages = {
+  '/':                          'index.html',
+  '/index':                     'index.html',
+  '/about':                     'about.html',
+  '/contact':                   'contact.html',
+  '/services':                  'services.html',
+  '/faqs':                      'faqs.html',
+  '/who-we-help':               'who-we-help.html',
+  '/bookkeeping':               'bookkeeping.html',
+  '/self-assessment-tax-returns': 'self-assessment-tax-returns.html',
+  '/sole-trader-accounts':      'sole-trader-accounts.html',
+  '/limited-company-accounts':  'limited-company-accounts.html',
+  '/vat-returns':               'vat-returns.html',
+  '/payroll-support':           'payroll-support.html',
+  '/corporation-tax-support':   'corporation-tax-support.html',
+  '/management-accounts':       'management-accounts.html',
+  '/business-start-up-support': 'business-start-up-support.html',
+  '/privacy-policy':            'privacy-policy.html',
+  '/terms-of-business':        'terms-of-business.html',
+  '/cookie-policy':             'cookie-policy.html',
+};
+
+Object.entries(pages).forEach(([route, file]) => {
+  app.get(route, (_req, res) => {
+    res.sendFile(path.join(__dirname, file));
+  });
+});
 
 // ---------------------------------------------------------------------------
 // Start
