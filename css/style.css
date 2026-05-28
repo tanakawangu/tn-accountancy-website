@@ -389,11 +389,13 @@ p {
 
 /* Logo */
 .site-logo {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  text-decoration: none;
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
   flex-shrink: 0;
+  text-decoration: none;
+  padding: 0;
+  line-height: 0;
 }
 
 .logo-main {
@@ -2168,54 +2170,30 @@ textarea.form-control {
 
 /* ============================================================
    LOGO IMAGE STYLES
+   Optimised asset: images/tn-accountancy-logo-optimised.png
+   Canvas: 642×561 px — artwork fills ~90% of canvas after cropping
+   transparent padding from original 1536×1024 file.
+   At CSS height H: visible artwork ≈ H × 0.893
    ============================================================ */
 
-/* Header logo image */
+/* Header logo image — target visible artwork 72–80px desktop */
 .site-logo-img {
   display: block;
-  height: 76px;
+  height: clamp(68px, 7.5vw, 84px);
   width: auto;
-  max-width: 360px;
-  object-fit: contain;
-  object-position: left center;
-  /* Ensure crisp rendering */
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
-  /* Preserve transparent background */
+  max-width: 220px;
   background: transparent;
 }
 
-/* Footer logo image */
+/* Footer logo image — target visible artwork 82–90px desktop */
 .footer-logo-img {
   display: block;
-  height: 84px;
+  height: clamp(72px, 8vw, 96px);
   width: auto;
-  max-width: 400px;
-  object-fit: contain;
-  object-position: left center;
-  image-rendering: -webkit-optimize-contrast;
+  max-width: 280px;
+  align-self: flex-start; /* prevents flex-direction:column stretch from widening the image */
   background: transparent;
   margin-bottom: var(--space-5);
-}
-
-/* If the logo file has a light background and needs a dark header treatment,
-   uncomment the line below to add a gentle white background pill around the logo */
-/*
-.site-logo-img {
-  background: rgba(255,255,255,0.92);
-  border-radius: 6px;
-  padding: 4px 10px;
-}
-*/
-
-/* Clear space around header logo */
-.site-logo {
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
-  text-decoration: none;
-  padding: 0;
-  line-height: 0;
 }
 
 /* Footer logo wrapper */
@@ -2223,26 +2201,28 @@ textarea.form-control {
   margin-bottom: var(--space-5);
 }
 
-/* Text fallback (shown when logo img fails to load or file not present) */
+/* Text fallback (shown when logo img fails to load) */
 .logo-text-fallback {
   display: flex;
   flex-direction: column;
   gap: 1px;
 }
 
-/* Mobile: slightly smaller header logo */
+/* Mobile: header logo */
 @media (max-width: 768px) {
   :root {
     --header-height: 80px;
   }
 
   .site-logo-img {
-    height: 58px;
-    max-width: 280px;
+    height: 62px;
+    max-width: 160px;
   }
 
   .footer-logo-img {
-    height: 64px;
+    height: clamp(58px, 16vw, 72px);
+    width: auto;
+    max-width: 240px;
   }
 }
 
@@ -2526,5 +2506,539 @@ textarea.form-control {
   body {
     font-size: 12pt;
     color: #000;
+  }
+}
+
+/* ============================================================
+   PREMIUM DESIGN UPGRADE — T&N ACCOUNTANCY
+   UI/UX Pro Max Enhancement Pass v2
+   ============================================================ */
+
+/* --- Hero Float Animation --- */
+@keyframes heroFloat {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-10px); }
+}
+
+@keyframes pulseDot {
+  0%, 100% { opacity: 1;   transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(0.7); }
+}
+
+@keyframes fillProgress {
+  from { width: 0%; }
+  to   { width: 76%; }
+}
+
+.hero-visual {
+  animation: heroFloat 7s ease-in-out infinite;
+}
+
+/* --- Hero Card Variants --- */
+.hero-card--featured {
+  border-color: rgba(196,150,42,0.45);
+  background: linear-gradient(135deg, rgba(196,150,42,0.09) 0%, rgba(46,72,128,0.12) 100%);
+}
+
+/* Deadline badge within hero cards */
+.hero-deadline-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: rgba(196,150,42,0.14);
+  border: 1px solid rgba(196,150,42,0.35);
+  border-radius: 100px;
+  padding: 3px 10px 3px 7px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  margin-bottom: var(--space-2);
+}
+
+.hero-deadline-dot {
+  width: 6px;
+  height: 6px;
+  background-color: var(--gold);
+  border-radius: 50%;
+  animation: pulseDot 2.2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+/* Hero metric display */
+.hero-metric {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  margin: var(--space-2) 0;
+}
+
+.hero-metric-number {
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.hero-metric-unit {
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.55);
+  font-weight: 500;
+}
+
+.hero-metric-label {
+  font-size: 0.68rem;
+  color: rgba(255,255,255,0.45);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-top: 2px;
+}
+
+/* Hero progress bar */
+.hero-progress-bar {
+  height: 4px;
+  background-color: rgba(255,255,255,0.1);
+  border-radius: 2px;
+  margin-top: var(--space-3);
+  overflow: hidden;
+}
+
+.hero-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light));
+  border-radius: 2px;
+  animation: fillProgress 2.8s 0.5s ease-out both;
+}
+
+/* Hero status dot */
+.hero-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.68rem;
+  color: rgba(255,255,255,0.42);
+  margin-top: var(--space-3);
+}
+
+.hero-status-dot {
+  width: 7px;
+  height: 7px;
+  background-color: #22c55e;
+  border-radius: 50%;
+  animation: pulseDot 2.8s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+/* Hero date chip */
+.hero-date-chip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(196,150,42,0.12);
+  border: 1px solid rgba(196,150,42,0.25);
+  border-radius: var(--radius);
+  padding: var(--space-3) var(--space-4);
+  text-align: center;
+  margin-bottom: var(--space-3);
+}
+
+.hero-date-chip-day {
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--gold);
+  line-height: 1;
+}
+
+.hero-date-chip-month {
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: rgba(255,255,255,0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 2px;
+}
+
+/* Hero two-stat row */
+.hero-stats-row {
+  display: flex;
+  gap: var(--space-4);
+  margin-top: var(--space-3);
+}
+
+.hero-stat-block {
+  flex: 1;
+}
+
+.hero-stat-value {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1;
+}
+
+.hero-stat-desc {
+  font-size: 0.62rem;
+  color: rgba(255,255,255,0.42);
+  margin-top: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* --- Trust Bar --- */
+.trust-bar {
+  background-color: var(--navy);
+  border-top: 1px solid rgba(255,255,255,0.06);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  padding: var(--space-4) 0;
+}
+
+.trust-bar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.trust-signal {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-5);
+  border-right: 1px solid rgba(255,255,255,0.07);
+}
+
+.trust-signal:last-child {
+  border-right: none;
+}
+
+.trust-signal-icon {
+  color: var(--gold);
+  font-size: 0.82rem;
+  flex-shrink: 0;
+}
+
+.trust-signal-text {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: rgba(255,255,255,0.7);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+/* --- Service Card with CTA button --- */
+.service-card-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-top: auto;
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border-grey);
+  flex-wrap: wrap;
+}
+
+.service-card:hover .service-card-actions {
+  border-top-color: rgba(196,150,42,0.15);
+}
+
+.service-card-actions .btn--sm {
+  padding: 0.45rem 1rem;
+  font-size: 0.78rem;
+}
+
+/* --- Who We Help — 4-column grid on desktop --- */
+.help-grid--8 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-5);
+}
+
+/* --- Process Step Inner Card --- */
+.process-step-card {
+  background-color: var(--white);
+  border: 1px solid var(--border-grey);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6) var(--space-6);
+  height: 100%;
+  transition: all var(--transition);
+  text-align: left;
+}
+
+.process-step-card:hover {
+  border-color: rgba(196,150,42,0.3);
+  box-shadow: var(--shadow);
+}
+
+.process-steps--cards {
+  position: relative;
+}
+
+.process-steps--cards .step-number {
+  margin: 0 0 var(--space-5) 0;
+}
+
+.process-steps--cards .process-step {
+  text-align: left;
+}
+
+/* --- CTA section dot pattern overlay --- */
+.cta-section::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255,255,255,0.035) 1px, transparent 1px);
+  background-size: 22px 22px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.cta-section > .container {
+  position: relative;
+  z-index: 1;
+}
+
+.cta-gold-line {
+  width: 48px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light));
+  border-radius: 2px;
+  margin: 0 auto var(--space-6);
+}
+
+/* --- Response promise badge --- */
+.response-promise {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  background-color: rgba(34,197,94,0.08);
+  border: 1px solid rgba(34,197,94,0.2);
+  border-radius: 100px;
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: #15803d;
+  margin-bottom: var(--space-5);
+}
+
+.response-promise-dot {
+  width: 6px;
+  height: 6px;
+  background-color: #22c55e;
+  border-radius: 50%;
+  animation: pulseDot 2.5s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+/* --- Hero phone quick-link --- */
+.hero-contact-strip {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-6);
+  margin-top: var(--space-3);
+  padding-top: var(--space-5);
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.hero-contact-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  color: rgba(255,255,255,0.55);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+
+.hero-contact-item i {
+  color: var(--gold);
+  font-size: 0.8rem;
+}
+
+.hero-contact-item strong {
+  color: rgba(255,255,255,0.85);
+  font-weight: 600;
+}
+
+.hero-contact-item:hover strong {
+  color: var(--gold);
+}
+
+/* --- Focus states (WCAG 2.1 AA) --- */
+*:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+.btn:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 3px;
+}
+
+.nav-link:focus-visible,
+.dropdown-link:focus-visible,
+.mobile-nav-link:focus-visible,
+.mobile-sub-link:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+.form-control:focus {
+  border-color: var(--navy);
+  box-shadow: 0 0 0 3px rgba(27,43,75,0.12);
+}
+
+/* --- Why Card body contrast fix --- */
+.why-card p {
+  color: rgba(255,255,255,0.76);
+}
+
+/* --- Bigger hero h1 --- */
+.hero h1 {
+  font-size: clamp(2.2rem, 5vw, 3.5rem);
+}
+
+/* --- Hero eyebrow phone inline --- */
+.hero-eyebrow-wrap {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-5);
+  margin-bottom: var(--space-5);
+}
+
+.hero-phone-quick {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: rgba(255,255,255,0.55);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+
+.hero-phone-quick i {
+  color: var(--gold);
+}
+
+.hero-phone-quick:hover {
+  color: var(--gold);
+}
+
+/* --- Services grid always stretch --- */
+.services-grid {
+  align-items: stretch;
+}
+
+/* --- Improved link underlines for body content --- */
+.content-body a:not([class]) {
+  color: var(--navy);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color var(--transition);
+}
+
+.content-body a:not([class]):hover {
+  color: var(--gold);
+}
+
+/* --- Prefers-reduced-motion --- */
+@media (prefers-reduced-motion: reduce) {
+  .hero-visual,
+  .hero-progress-fill,
+  .hero-deadline-dot,
+  .hero-status-dot,
+  .response-promise-dot {
+    animation: none;
+  }
+
+  .fade-in {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* --- Responsive: help-grid--8 --- */
+@media (max-width: 1200px) {
+  .help-grid--8 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 1024px) {
+  .help-grid--8 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .trust-bar-inner {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 768px) {
+  .help-grid--8 {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-4);
+  }
+
+  .trust-bar-inner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+  }
+
+  .trust-signal {
+    border-right: none;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    padding: var(--space-3) var(--space-4);
+  }
+
+  .trust-signal:last-child {
+    border-bottom: none;
+  }
+
+  /* Mobile hero: hide cards 3 & 4 */
+  .hero-visual .hero-card:nth-child(n+3) {
+    display: none;
+  }
+
+  .hero-visual {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+    animation: none;
+  }
+
+  .service-card-actions {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-3);
+  }
+
+  .hero-contact-strip {
+    gap: var(--space-4);
+  }
+
+  .process-steps--cards {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 540px) {
+  .help-grid--8 {
+    grid-template-columns: 1fr;
+  }
+
+  .process-steps--cards {
+    grid-template-columns: 1fr;
   }
 }
