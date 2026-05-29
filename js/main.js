@@ -346,4 +346,71 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
+  /* --- Services Carousel (prev/next + counter) --- */
+  const servicesGrid = document.querySelector('.services-track-wrap .services-grid');
+  const prevBtn      = document.querySelector('.carousel-btn--prev');
+  const nextBtn      = document.querySelector('.carousel-btn--next');
+  const counterEl    = document.querySelector('.carousel-counter');
+
+  if (servicesGrid && prevBtn && nextBtn) {
+    const cardWidth = () => {
+      const card = servicesGrid.querySelector('.service-card');
+      if (!card) return 300;
+      return card.offsetWidth + parseInt(getComputedStyle(servicesGrid).gap || '16');
+    };
+
+    const totalCards = servicesGrid.querySelectorAll('.service-card').length;
+
+    const updateState = () => {
+      const sl  = Math.round(servicesGrid.scrollLeft);
+      const max = servicesGrid.scrollWidth - servicesGrid.clientWidth;
+      prevBtn.disabled = sl <= 0;
+      nextBtn.disabled = sl >= max - 4;
+      if (counterEl) {
+        const idx = Math.round(sl / (cardWidth() || 1)) + 1;
+        counterEl.textContent = idx + ' / ' + totalCards;
+      }
+    };
+
+    prevBtn.addEventListener('click', () => {
+      servicesGrid.scrollBy({ left: -cardWidth(), behavior: 'smooth' });
+    });
+
+    nextBtn.addEventListener('click', () => {
+      servicesGrid.scrollBy({ left: cardWidth(), behavior: 'smooth' });
+    });
+
+    servicesGrid.addEventListener('scroll', updateState, { passive: true });
+    window.addEventListener('resize', updateState, { passive: true });
+    updateState();
+  }
+
+  /* --- Nav dropdown: arrow-key keyboard navigation --- */
+  document.querySelectorAll('.nav-item--dropdown').forEach(dropdown => {
+    const trigger = dropdown.querySelector('.nav-link');
+    const links   = [...dropdown.querySelectorAll('.dropdown-link')];
+    if (!trigger || !links.length) return;
+
+    trigger.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        links[0].focus();
+      }
+    });
+
+    links.forEach((link, i) => {
+      link.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          (links[i + 1] || links[0]).focus();
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          i === 0 ? trigger.focus() : links[i - 1].focus();
+        } else if (e.key === 'Escape') {
+          trigger.focus();
+        }
+      });
+    });
+  });
+
 });
